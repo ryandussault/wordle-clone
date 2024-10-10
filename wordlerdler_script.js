@@ -184,4 +184,5 @@ function reset_game(){
   }
   //resets the current row after using it to loop through the wordle board
   current_row = 1;
+  setScreen("wordleScreen");
 }
