@@ -11,6 +11,18 @@ var valid_answers = getColumn("Wordle", "validWordleAnswer");
 var valid_guesses = getColumn("sorted_guesses", "validWordleGuess");
 //stores a randomly picked answer from the answer list
 var answer = valid_answers[randomNumber(0,2307)];
+
+//scipt to generate onEvent's for the virtual keyboard
+//***********************************************************************************************************************************
+var keyboard_buttons_letters = [];
+for (var i =97;i<123;i++){
+  appendItem(keyboard_buttons_letters, ("button"+String.fromCharCode(i)));
+}
+//for(var i = 0;i<keyboard_buttons_letters.length;i++){
+//  console.log("onEvent('"+keyboard_buttons_letters[i]+"','click',function(){populate_letter(keyboard_buttons_letters[i][6])})");
+//}
+//***********************************************************************************************************************************
+
 //stores the range the first letter of the guess appears in the valid guess table
 var letter_index_table = {
 'a':[0,595], 
@@ -53,22 +65,31 @@ onEvent("reset_button", "click", function(){
 //checks if the key pressed is a special character, if the row is full, and if the key isnt empty space 
 //then it sets the current box to the key pressed, increases the box number and hides the invalid guess/key label
 onEvent("wordleScreen", "keypress", function(event){
-  if (special_characters(event.key) == false && current_box<5 && event.charCode !=13){
-    setProperty("row"+current_row+"_box"+current_box, "text", event.key);
+  populate_letter(event.key, event.charCode);
+});
+
+function populate_letter(key, char){
+  if (special_characters(key) == false && current_box<5 && char !=13){
+    setProperty("row"+current_row+"_box"+current_box, "text", key);
     current_box++;
     hideElement("invalid_guess_label");
   }
-});
+}
 
 onEvent("wordleScreen", "keydown", function(event){
-  //deletes the letter in the previous box
-  if (event.key == "Backspace" && current_box>0){
+  update_boxes_special_input(event.key);
+});
+
+function update_boxes_special_input(key){
+   //deletes the letter in the previous box
+  if (key == "Backspace" && current_box>0){
      current_box = current_box-1;
      //changes the letter in the box to empty space
     setProperty("row"+current_row+"_box"+current_box,"text","");
+    setSize("row"+current_row+"_box"+current_box,40,20);
   }
   //checks if the keydown was enter, if the current row is less than 7 and also makes sure the user is at the last box
-  else if (event.key == "Enter" && current_row<7 && current_box ==5){
+  else if (key == "Enter" && current_row<7 && current_box ==5){
     //loops through the 5 boxes to concat the userguess, also puts each letter as lowercase incase it was uppercase when inputted
     for (var x = 0; x<5; x++){
       user_guess = user_guess+getText("row"+current_row+"_box"+x).toLowerCase();
@@ -107,7 +128,7 @@ onEvent("wordleScreen", "keydown", function(event){
       showElement("invalid_guess_label");
     }
   }
-});
+}
 
 //update row color function hat is used above
 function update_row_colors(){
@@ -179,6 +200,7 @@ function reset_game(){
     for (var i = 0; i <5; i++){
     setProperty("row"+current_row+"_box"+i, "background-color", "white");
     setProperty("row"+current_row+"_box"+i, "text", "");
+    setSize("row"+current_row+"_box"+i,40,20);
     }
     current_row++;
   }
@@ -186,3 +208,34 @@ function reset_game(){
   current_row = 1;
   setScreen("wordleScreen");
 }
+
+
+//code generated with script at the top
+onEvent('buttona','click',function(){populate_letter(keyboard_buttons_letters[0][6]);});
+onEvent('buttonb','click',function(){populate_letter(keyboard_buttons_letters[1][6]);});
+onEvent('buttonc','click',function(){populate_letter(keyboard_buttons_letters[2][6]);});
+onEvent('buttond','click',function(){populate_letter(keyboard_buttons_letters[3][6]);});
+onEvent('buttone','click',function(){populate_letter(keyboard_buttons_letters[4][6]);});
+onEvent('buttonf','click',function(){populate_letter(keyboard_buttons_letters[5][6]);});
+onEvent('buttong','click',function(){populate_letter(keyboard_buttons_letters[6][6]);});
+onEvent('buttonh','click',function(){populate_letter(keyboard_buttons_letters[7][6]);});
+onEvent('buttoni','click',function(){populate_letter(keyboard_buttons_letters[8][6]);});
+onEvent('buttonj','click',function(){populate_letter(keyboard_buttons_letters[9][6]);});
+onEvent('buttonk','click',function(){populate_letter(keyboard_buttons_letters[10][6]);});
+onEvent('buttonl','click',function(){populate_letter(keyboard_buttons_letters[11][6]);});
+onEvent('buttonm','click',function(){populate_letter(keyboard_buttons_letters[12][6]);});
+onEvent('buttonn','click',function(){populate_letter(keyboard_buttons_letters[13][6]);});
+onEvent('buttono','click',function(){populate_letter(keyboard_buttons_letters[14][6]);});
+onEvent('buttonp','click',function(){populate_letter(keyboard_buttons_letters[15][6]);});
+onEvent('buttonq','click',function(){populate_letter(keyboard_buttons_letters[16][6]);});
+onEvent('buttonr','click',function(){populate_letter(keyboard_buttons_letters[17][6]);});
+onEvent('buttons','click',function(){populate_letter(keyboard_buttons_letters[18][6]);});
+onEvent('buttont','click',function(){populate_letter(keyboard_buttons_letters[19][6]);});
+onEvent('buttonu','click',function(){populate_letter(keyboard_buttons_letters[20][6]);});
+onEvent('buttonv','click',function(){populate_letter(keyboard_buttons_letters[21][6]);});
+onEvent('buttonw','click',function(){populate_letter(keyboard_buttons_letters[22][6]);});
+onEvent('buttonx','click',function(){populate_letter(keyboard_buttons_letters[23][6]);});
+onEvent('buttony','click',function(){populate_letter(keyboard_buttons_letters[24][6]);});
+onEvent('buttonz','click',function(){populate_letter(keyboard_buttons_letters[25][6]);});
+onEvent('buttonbackspace','click',function(){update_boxes_special_input("Backspace");});
+onEvent('buttonenter','click',function(){update_boxes_special_input("Enter");});
