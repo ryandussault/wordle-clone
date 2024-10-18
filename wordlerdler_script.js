@@ -68,6 +68,7 @@ onEvent("wordleScreen", "keypress", function(event){
   populate_letter(event.key, event.charCode);
 });
 
+//puts the letter inputted in the box 
 function populate_letter(key, char){
   if (special_characters(key) == false && current_box<5 && char !=13){
     setProperty("row"+current_row+"_box"+current_box, "text", key);
@@ -130,23 +131,30 @@ function update_boxes_special_input(key){
   }
 }
 
-//update row color function hat is used above
+//update row color function that is used above
+//also used for the keyboard letter colors
 function update_row_colors(){
   //loops through the current row
   for (var index =0; index<5;index++){
       //sets the user_guess to upper case for display
       setProperty("row"+current_row+"_box"+index, "text", user_guess[index].toUpperCase());
       //checks if the letter is in the right spot and if so sets the box backgroud to green
+      //also sets the appropiate letter button to green
       if (user_guess[index].toLowerCase() == answer[index]){
         setProperty("row"+current_row+"_box"+index, "background-color", "green");
+        setProperty("button"+answer[index],"background-color","green");
       }
-      //checks if the letter is in the word and sets the letters backgound to yellow
+      //checks if the letter is in the word and sets the letters, both button and input box, backgound to yellow
       else if (answer.includes(user_guess[index].toLowerCase())){
         setProperty("row"+current_row+"_box"+index, "background-color", "yellow");
+        if (getProperty("button"+user_guess[index].toLowerCase(),"background-color")!= "green"){
+          setProperty("button"+user_guess[index].toLowerCase(),"background-color","yellow");
+        }
       }
       //if the letter isnt in the word it sets the background to gray
       else{
         setProperty("row"+current_row+"_box"+index, "background-color", "gray");
+        setProperty("button"+user_guess[index].toLowerCase(),"background-color","gray");
       }
     }
 }
@@ -203,6 +211,10 @@ function reset_game(){
     setSize("row"+current_row+"_box"+i,40,20);
     }
     current_row++;
+  }
+//resets row colors
+  for (var g =97;g<123;g++){
+    setProperty("button"+String.fromCharCode(g),"background-color","white");
   }
   //resets the current row after using it to loop through the wordle board
   current_row = 1;
